@@ -9,6 +9,12 @@ pipeline {
             }
         }
 
+        stage('Cleanup old containers') {
+            steps {
+                sh 'docker rm -f mysql-db backend-app frontend-app adminer-ui 2>/dev/null || true'
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 sh 'docker build -t backend-test ./backend'
