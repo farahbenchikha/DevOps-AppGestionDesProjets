@@ -23,27 +23,25 @@ pipeline {
 
         stage('Deploy with Docker Compose') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                sh 'docker compose ps'
+                sh 'docker-compose ps'
             }
         }
     }
 
     post {
         always {
-            sh 'docker compose ps || true'
+            sh 'docker-compose ps || true'
         }
-
         success {
             echo 'Application deployed successfully!'
         }
-
         failure {
             echo 'Pipeline failed!'
         }
