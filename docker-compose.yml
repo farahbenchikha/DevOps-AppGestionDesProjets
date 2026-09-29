@@ -10,6 +10,12 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
   backend:
     image: backend-test:latest
@@ -17,9 +23,11 @@ services:
     ports:
       - "8083:8080"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - app-network
+    restart: on-failure
 
   frontend:
     image: frontend-test:latest
